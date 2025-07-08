@@ -1,0 +1,193 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 px-0">
+            <div class="bg-dark min-vh-100">
+                <div class="p-3">
+                    <h5 class="text-white">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Admin Panel
+                    </h5>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link text-light" href="/admin/dashboard">
+                        <i class="fas fa-home me-2"></i>Dashboard
+                    </a>
+                    <a class="nav-link text-light active" href="/admin/tables">
+                        <i class="fas fa-table me-2"></i>Manage Tables
+                    </a>
+                    <a class="nav-link text-light" href="/admin/bookings">
+                        <i class="fas fa-calendar-alt me-2"></i>Manage Bookings
+                    </a>
+                    <a class="nav-link text-light" href="/admin/users">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <div class="p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <a href="/admin/tables" class="btn btn-outline-secondary me-3">
+                        <i class="fas fa-arrow-left me-2"></i>Back
+                    </a>
+                    <h1>
+                        <%= isEdit ? 'Edit' : 'Add New' %> Table
+                    </h1>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-<%= isEdit ? 'edit' : 'plus' %> me-2"></i>
+                                    Table Information
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- Error Messages -->
+                                <% if (errors && errors.length> 0) { %>
+                                    <div class="alert alert-danger">
+                                        <ul class="mb-0">
+                                            <% errors.forEach(error=> { %>
+                                                <li>
+                                                    <%= error.msg %>
+                                                </li>
+                                                <% }) %>
+                                        </ul>
+                                    </div>
+                                    <% } %>
+
+                                        <form action="<%= isEdit ? `/admin/tables/${table.id}` : '/admin/tables' %>"
+                                            method="POST">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="tableNumber" class="form-label">Table Number *</label>
+                                                    <input type="text" class="form-control" id="tableNumber"
+                                                        name="tableNumber" value="<%= table.tableNumber || '' %>"
+                                                        placeholder="e.g., T001, A-01" required>
+                                                    <small class="text-muted">Unique identifier for the table</small>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="capacity" class="form-label">Capacity *</label>
+                                                    <select class="form-select" id="capacity" name="capacity" required>
+                                                        <option value="">Select capacity</option>
+                                                        <% for(let i=1; i <=20; i++) { %>
+                                                            <option value="<%= i %>" <%=table.capacity==i ? 'selected'
+                                                                : '' %>>
+                                                                <%= i %>
+                                                                    <%= i===1 ? 'guest' : 'guests' %>
+                                                            </option>
+                                                            <% } %>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="location" class="form-label">Location</label>
+                                                    <input type="text" class="form-control" id="location"
+                                                        name="location" value="<%= table.location || '' %>"
+                                                        placeholder="e.g., Window Side, Main Hall">
+                                                    <small class="text-muted">Optional: Where the table is
+                                                        located</small>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="pricePerHour" class="form-label">Price per Hour ($)
+                                                        *</label>
+                                                    <input type="number" class="form-control" id="pricePerHour"
+                                                        name="pricePerHour" value="<%= table.pricePerHour || '' %>"
+                                                        step="0.01" min="0" placeholder="0.00" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="description" class="form-label">Description</label>
+                                                <textarea class="form-control" id="description" name="description"
+                                                    rows="3"
+                                                    placeholder="Describe the table features, ambiance, or special characteristics..."><%= table.description || '' %></textarea>
+                                                <small class="text-muted">Optional: Additional details about the
+                                                    table</small>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="isAvailable"
+                                                        name="isAvailable" value="true" <%=table.isAvailable !==false
+                                                        ? 'checked' : '' %>
+                                                    >
+                                                    <label class="form-check-label" for="isAvailable">
+                                                        Available for booking
+                                                    </label>
+                                                    <small class="form-text text-muted d-block">
+                                                        Uncheck to temporarily disable this table from booking
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex gap-3">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fas fa-<%= isEdit ? 'save' : 'plus' %> me-2"></i>
+                                                    <%= isEdit ? 'Update' : 'Create' %> Table
+                                                </button>
+                                                <a href="/admin/tables" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-times me-2"></i>
+                                                    Cancel
+                                                </a>
+                                            </div>
+                                        </form>
+                            </div>
+                        </div>
+
+                        <!-- Preview Card (for edit mode) -->
+                        <% if (isEdit && table.id) { %>
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-eye me-2"></i>
+                                        Preview
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Table <%= table.tableNumber %>
+                                            </h6>
+                                            <p class="text-muted mb-2">
+                                                <i class="fas fa-users me-1"></i>
+                                                Up to <%= table.capacity %> guests
+                                            </p>
+                                            <% if (table.location) { %>
+                                                <p class="text-muted mb-2">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                                    <%= table.location %>
+                                                </p>
+                                                <% } %>
+                                                    <p class="text-success fw-bold mb-0">
+                                                        $<%= parseFloat(table.pricePerHour || 0).toFixed(2) %> per hour
+                                                    </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <% if (table.description) { %>
+                                                <p class="text-muted">
+                                                    <%= table.description %>
+                                                </p>
+                                                <% } %>
+                                                    <span
+                                                        class="badge bg-<%= table.isAvailable !== false ? 'success' : 'danger' %>">
+                                                        <%= table.isAvailable !==false ? 'Available' : 'Unavailable' %>
+                                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

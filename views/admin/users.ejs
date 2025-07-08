@@ -1,0 +1,329 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 px-0">
+            <div class="bg-dark min-vh-100">
+                <div class="p-3">
+                    <h5 class="text-white">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Admin Panel
+                    </h5>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link text-light" href="/admin/dashboard">
+                        <i class="fas fa-home me-2"></i>Dashboard
+                    </a>
+                    <a class="nav-link text-light" href="/admin/tables">
+                        <i class="fas fa-table me-2"></i>Manage Tables
+                    </a>
+                    <a class="nav-link text-light" href="/admin/bookings">
+                        <i class="fas fa-calendar-alt me-2"></i>Manage Bookings
+                    </a>
+                    <a class="nav-link text-light active" href="/admin/users">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <div class="p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Manage Users</h1>
+                </div>
+
+                <!-- Users Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-users me-2"></i>
+                            Registered Users
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <% if (users.length> 0) { %>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>User Info</th>
+                                            <th>Contact</th>
+                                            <th>Status</th>
+                                            <th>Joined</th>
+                                            <th>Total Bookings</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% users.forEach(user=> { %>
+                                            <tr>
+                                                <td>#<%= user.id %>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                                                            style="width: 40px; height: 40px;">
+                                                            <%= user.name.charAt(0).toUpperCase() %>
+                                                        </div>
+                                                        <div>
+                                                            <strong>
+                                                                <%= user.name %>
+                                                            </strong><br>
+                                                            <small class="text-muted">
+                                                                <i class="fas fa-user-tag me-1"></i>
+                                                                <%= user.role %>
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <i class="fas fa-envelope me-1 text-muted"></i>
+                                                        <a href="mailto:<%= user.email %>" class="text-decoration-none">
+                                                            <%= user.email %>
+                                                        </a><br>
+                                                        <% if (user.phone) { %>
+                                                            <i class="fas fa-phone me-1 text-muted"></i>
+                                                            <a href="tel:<%= user.phone %>"
+                                                                class="text-decoration-none">
+                                                                <%= user.phone %>
+                                                            </a>
+                                                            <% } else { %>
+                                                                <small class="text-muted">No phone number</small>
+                                                                <% } %>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <% if (user.isActive) { %>
+                                                        <span class="badge bg-success">
+                                                            <i class="fas fa-check me-1"></i>Active
+                                                        </span>
+                                                        <% } else { %>
+                                                            <span class="badge bg-danger">
+                                                                <i class="fas fa-times me-1"></i>Inactive
+                                                            </span>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <small class="text-muted">
+                                                        <%= new Date(user.createdAt).toLocaleDateString() %>
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info">
+                                                        <%= user.bookings ? user.bookings.length : 0 %> bookings
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <% if (user.isActive) { %>
+                                                            <form action="/admin/users/<%= user.id %>/toggle-status"
+                                                                method="POST" class="d-inline">
+                                                                <input type="hidden" name="isActive" value="false">
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-outline-warning"
+                                                                    onclick="return confirm('Are you sure you want to deactivate this user?')">
+                                                                    <i class="fas fa-user-slash me-1"></i>Deactivate
+                                                                </button>
+                                                            </form>
+                                                            <% } else { %>
+                                                                <form action="/admin/users/<%= user.id %>/toggle-status"
+                                                                    method="POST" class="d-inline">
+                                                                    <input type="hidden" name="isActive" value="true">
+                                                                    <button type="submit"
+                                                                        class="btn btn-sm btn-outline-success">
+                                                                        <i class="fas fa-user-check me-1"></i>Activate
+                                                                    </button>
+                                                                </form>
+                                                                <% } %>
+
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-outline-info"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#userModal<%= user.id %>">
+                                                                        <i class="fas fa-eye me-1"></i>View
+                                                                    </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- User Detail Modal -->
+                                            <div class="modal fade" id="userModal<%= user.id %>" tabindex="-1">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">
+                                                                <i class="fas fa-user me-2"></i>User Details
+                                                            </h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <h6 class="text-muted">Personal Information</h6>
+                                                                    <table class="table table-sm">
+                                                                        <tr>
+                                                                            <td><strong>Name:</strong></td>
+                                                                            <td>
+                                                                                <%= user.name %>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><strong>Email:</strong></td>
+                                                                            <td>
+                                                                                <%= user.email %>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><strong>Phone:</strong></td>
+                                                                            <td>
+                                                                                <%= user.phone || 'Not provided' %>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><strong>Role:</strong></td>
+                                                                            <td>
+                                                                                <span class="badge bg-primary">
+                                                                                    <%= user.role %>
+                                                                                </span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><strong>Status:</strong></td>
+                                                                            <td>
+                                                                                <% if (user.isActive) { %>
+                                                                                    <span
+                                                                                        class="badge bg-success">Active</span>
+                                                                                    <% } else { %>
+                                                                                        <span
+                                                                                            class="badge bg-danger">Inactive</span>
+                                                                                        <% } %>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><strong>Joined:</strong></td>
+                                                                            <td>
+                                                                                <%= new
+                                                                                    Date(user.createdAt).toLocaleString()
+                                                                                    %>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <h6 class="text-muted">Account Statistics</h6>
+                                                                    <div class="card bg-light">
+                                                                        <div class="card-body text-center">
+                                                                            <h4 class="text-primary">
+                                                                                <%= user.bookings ? user.bookings.length
+                                                                                    : 0 %>
+                                                                            </h4>
+                                                                            <p class="mb-0 text-muted">Total Bookings
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                                Close
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <% } else { %>
+                                <div class="text-center py-5">
+                                    <i class="fas fa-user-times fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No users found</h5>
+                                    <p class="text-muted">Users will appear here when they register.</p>
+                                </div>
+                                <% } %>
+                    </div>
+                </div>
+
+                <!-- User Statistics -->
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <div class="card text-white bg-success">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h4>
+                                            <%= users.filter(u=> u.isActive).length %>
+                                        </h4>
+                                        <p class="mb-0">Active Users</p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-user-check fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-warning">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h4>
+                                            <%= users.filter(u=> !u.isActive).length %>
+                                        </h4>
+                                        <p class="mb-0">Inactive Users</p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-user-slash fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-info">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h4>
+                                            <%= users.length %>
+                                        </h4>
+                                        <p class="mb-0">Total Users</p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-users fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-primary">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h4>
+                                            <%= users.filter(u=> new Date(u.createdAt).toDateString() === new
+                                                Date().toDateString()).length %>
+                                        </h4>
+                                        <p class="mb-0">New Today</p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-user-plus fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

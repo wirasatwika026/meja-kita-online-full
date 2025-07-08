@@ -1,0 +1,255 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Welcome back, <%= user.name %>!</h1>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>
+                                <%= upcomingBookings.length %>
+                            </h4>
+                            <p class="mb-0">Upcoming Bookings</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-calendar-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>
+                                <%= recentBookings.length %>
+                            </h4>
+                            <p class="mb-0">Total Bookings</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-list fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>
+                                <%= recentBookings.filter(b=> b.status === 'confirmed').length %>
+                            </h4>
+                            <p class="mb-0">Confirmed</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Quick Actions -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>
+                        Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/booking/tables" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>
+                            Book New Table
+                        </a>
+                        <a href="/user/bookings" class="btn btn-outline-primary">
+                            <i class="fas fa-list me-2"></i>
+                            View All Bookings
+                        </a>
+                        <a href="/user/profile" class="btn btn-outline-secondary">
+                            <i class="fas fa-user me-2"></i>
+                            Update Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Bookings -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        Upcoming Bookings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <% if (upcomingBookings.length> 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Table</th>
+                                        <th>Guests</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% upcomingBookings.slice(0, 5).forEach(booking=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= new Date(booking.bookingDate).toLocaleDateString() %>
+                                            </td>
+                                            <td>
+                                                <%= booking.startTime %> - <%= booking.endTime %>
+                                            </td>
+                                            <td>Table <%= booking.table.tableNumber %>
+                                            </td>
+                                            <td>
+                                                <%= booking.guestCount %>
+                                            </td>
+                                            <td>
+                                                <% let statusClass='secondary' ; if (booking.status==='confirmed' )
+                                                    statusClass='success' ; else if (booking.status==='cancelled' )
+                                                    statusClass='danger' ; else if (booking.status==='completed' )
+                                                    statusClass='info' ; %>
+                                                    <span class="badge bg-<%= statusClass %>">
+                                                        <%= booking.status.charAt(0).toUpperCase() +
+                                                            booking.status.slice(1) %>
+                                                    </span>
+                                            </td>
+                                            <td>
+                                                <% if (booking.status==='pending' || booking.status==='confirmed' ) { %>
+                                                    <form action="/booking/<%= booking.id %>/cancel" method="POST"
+                                                        class="d-inline">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                            data-confirm="Are you sure you want to cancel this booking?">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </form>
+                                                    <% } %>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } else { %>
+                            <div class="text-center py-4">
+                                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">No upcoming bookings</p>
+                                <a href="/booking/tables" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Book Your First Table
+                                </a>
+                            </div>
+                            <% } %>
+                </div>
+                <% if (upcomingBookings.length> 5) { %>
+                    <div class="card-footer">
+                        <a href="/user/bookings" class="btn btn-primary">
+                            <i class="fas fa-eye me-2"></i>View All Bookings
+                        </a>
+                    </div>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>
+                        Recent Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <% if (recentBookings.length> 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Booking Date</th>
+                                        <th>Time</th>
+                                        <th>Table</th>
+                                        <th>Guests</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                        <th>Created</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% recentBookings.slice(0, 10).forEach(booking=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= new Date(booking.bookingDate).toLocaleDateString() %>
+                                            </td>
+                                            <td>
+                                                <%= booking.startTime %> - <%= booking.endTime %>
+                                            </td>
+                                            <td>
+                                                Table <%= booking.table.tableNumber %>
+                                                    <% if (booking.table.location) { %>
+                                                        <br><small class="text-muted">(<%= booking.table.location %>
+                                                                )</small>
+                                                        <% } %>
+                                            </td>
+                                            <td>
+                                                <%= booking.guestCount %>
+                                            </td>
+                                            <td>
+                                                <% let statusClass='secondary' ; if (booking.status==='confirmed' )
+                                                    statusClass='success' ; else if (booking.status==='cancelled' )
+                                                    statusClass='danger' ; else if (booking.status==='completed' )
+                                                    statusClass='info' ; %>
+                                                    <span class="badge bg-<%= statusClass %>">
+                                                        <%= booking.status.charAt(0).toUpperCase() +
+                                                            booking.status.slice(1) %>
+                                                    </span>
+                                            </td>
+                                            <td>$<%= parseFloat(booking.totalAmount).toFixed(2) %>
+                                            </td>
+                                            <td>
+                                                <%= new Date(booking.createdAt).toLocaleDateString() %>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } else { %>
+                            <div class="text-center py-4">
+                                <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">No booking history yet</p>
+                                <a href="/booking/tables" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Make Your First Booking
+                                </a>
+                            </div>
+                            <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,179 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Success Message -->
+            <div class="alert alert-success text-center mb-4">
+                <i class="fas fa-check-circle fa-3x mb-3"></i>
+                <h4>Booking Confirmed!</h4>
+                <p class="mb-0">Your table reservation has been successfully submitted.</p>
+            </div>
+
+            <!-- Booking Details Card -->
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-receipt me-2"></i>
+                        Booking Details
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Booking ID -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="bg-light p-3 rounded text-center">
+                                <h5 class="mb-1">Booking Reference</h5>
+                                <h3 class="text-primary">#<%= booking.id.toString().padStart(6, '0' ) %>
+                                </h3>
+                                <small class="text-muted">Please save this reference number for your records</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">Customer Information</h6>
+                            <div class="mb-2">
+                                <strong>Name:</strong>
+                                <%= booking.user.name %>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Email:</strong>
+                                <%= booking.user.email %>
+                            </div>
+                            <% if (booking.user.phone) { %>
+                                <div class="mb-2">
+                                    <strong>Phone:</strong>
+                                    <%= booking.user.phone %>
+                                </div>
+                                <% } %>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">Table Information</h6>
+                            <div class="mb-2">
+                                <strong>Table Number:</strong>
+                                <%= booking.table.tableNumber %>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Capacity:</strong>
+                                <%= booking.table.capacity %> guests
+                            </div>
+                            <% if (booking.table.location) { %>
+                                <div class="mb-2">
+                                    <strong>Location:</strong>
+                                    <%= booking.table.location %>
+                                </div>
+                                <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Booking Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">Reservation Details</h6>
+                            <div class="mb-2">
+                                <strong>Date:</strong>
+                                <%= new Date(booking.bookingDate).toLocaleDateString('en-US', { weekday: 'long' ,
+                                    year: 'numeric' , month: 'long' , day: 'numeric' }) %>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Time:</strong>
+                                <%= booking.startTime %> - <%= booking.endTime %>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Duration:</strong>
+                                <% const start=new Date(`2000-01-01T${booking.startTime}`); const end=new
+                                    Date(`2000-01-01T${booking.endTime}`); const hours=(end - start) / (1000 * 60 * 60);
+                                    %>
+                                    <%= hours %> hour<%= hours !==1 ? 's' : '' %>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Guests:</strong>
+                                <%= booking.guestCount %>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">Payment Summary</h6>
+                            <div class="mb-2">
+                                <strong>Rate:</strong> $<%= parseFloat(booking.table.pricePerHour).toFixed(2) %> per
+                                    hour
+                            </div>
+                            <div class="mb-2">
+                                <strong>Duration:</strong>
+                                <%= hours %> hour<%= hours !==1 ? 's' : '' %>
+                            </div>
+                            <hr>
+                            <div class="mb-2">
+                                <strong class="text-success">Total Amount:</strong>
+                                <span class="h5 text-success">$<%= parseFloat(booking.totalAmount).toFixed(2) %></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Special Requests -->
+                    <% if (booking.specialRequests) { %>
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="text-muted mb-3">Special Requests</h6>
+                                <div class="bg-light p-3 rounded">
+                                    <%= booking.specialRequests %>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+
+                            <!-- Status -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h6 class="text-muted mb-3">Booking Status</h6>
+                                    <span class="badge bg-warning fs-6 px-3 py-2">
+                                        <i class="fas fa-clock me-2"></i>
+                                        Pending Confirmation
+                                    </span>
+                                    <p class="text-muted mt-2 mb-0">
+                                        Your booking is currently pending review. You will receive a confirmation email
+                                        once it's approved.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Important Information -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="alert alert-info">
+                                        <h6>
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            Important Information
+                                        </h6>
+                                        <ul class="mb-0">
+                                            <li>Please arrive on time for your reservation</li>
+                                            <li>You can cancel your booking up to 2 hours before the reserved time</li>
+                                            <li>A confirmation email will be sent to <%= booking.user.email %>
+                                            </li>
+                                            <li>For any changes or questions, please contact us with your booking
+                                                reference</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex gap-3 justify-content-center">
+                                <a href="/user/dashboard" class="btn btn-primary">
+                                    <i class="fas fa-tachometer-alt me-2"></i>
+                                    Go to Dashboard
+                                </a>
+                                <a href="/user/bookings" class="btn btn-outline-primary">
+                                    <i class="fas fa-list me-2"></i>
+                                    View All Bookings
+                                </a>
+                                <a href="/booking/tables" class="btn btn-outline-secondary">
+                                    <i class="fas fa-plus me-2"></i>
+                                    Book Another Table
+                                </a>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

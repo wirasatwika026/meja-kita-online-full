@@ -1,0 +1,147 @@
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section bg-primary text-white rounded-4 p-5 mb-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Meja Kita Online</h1>
+                <p class="lead mb-4">
+                    Platform booking meja restaurant yang memudahkan Anda untuk mereservasi meja favorit
+                    kapan saja dan di mana saja. Nikmati pengalaman dining yang tak terlupakan!
+                </p>
+                <% if (!user) { %>
+                    <div class="d-flex gap-3">
+                        <a href="/auth/register" class="btn btn-light btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Register Now
+                        </a>
+                        <a href="/auth/login" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </a>
+                    </div>
+                    <% } else { %>
+                        <a href="/booking/tables" class="btn btn-light btn-lg">
+                            <i class="fas fa-calendar-plus me-2"></i>Book a Table Now
+                        </a>
+                        <% } %>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-utensils" style="font-size: 12rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-5 fw-bold">Mengapa Memilih Kami?</h2>
+            <p class="lead text-muted">Fitur-fitur unggulan yang memudahkan reservasi meja Anda</p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+                        style="width: 80px; height: 80px;">
+                        <i class="fas fa-clock fa-2x"></i>
+                    </div>
+                    <h4 class="card-title">Real-time Booking</h4>
+                    <p class="card-text text-muted">
+                        Lihat ketersediaan meja secara real-time dan lakukan booking instantly tanpa perlu menunggu
+                        konfirmasi.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-success text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+                        style="width: 80px; height: 80px;">
+                        <i class="fas fa-mobile-alt fa-2x"></i>
+                    </div>
+                    <h4 class="card-title">Easy to Use</h4>
+                    <p class="card-text text-muted">
+                        Interface yang user-friendly dan responsif, mudah digunakan di berbagai perangkat mulai dari
+                        desktop hingga mobile.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-info text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+                        style="width: 80px; height: 80px;">
+                        <i class="fas fa-shield-alt fa-2x"></i>
+                    </div>
+                    <h4 class="card-title">Secure & Reliable</h4>
+                    <p class="card-text text-muted">
+                        Sistem keamanan yang terjamin dengan perlindungan data pribadi dan riwayat booking yang
+                        tersimpan aman.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How it Works Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-5 fw-bold">Cara Kerja</h2>
+            <p class="lead text-muted">Tiga langkah mudah untuk mereservasi meja</p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4 text-center">
+            <div class="step-number bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+                style="width: 60px; height: 60px;">
+                <span class="fw-bold fs-4">1</span>
+            </div>
+            <h4>Register & Login</h4>
+            <p class="text-muted">Daftar akun baru atau login dengan akun yang sudah ada untuk mulai melakukan booking.
+            </p>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <div class="step-number bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+                style="width: 60px; height: 60px;">
+                <span class="fw-bold fs-4">2</span>
+            </div>
+            <h4>Pilih Meja</h4>
+            <p class="text-muted">Cari dan pilih meja yang sesuai dengan kebutuhan Anda berdasarkan tanggal, waktu, dan
+                jumlah tamu.</p>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <div class="step-number bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+                style="width: 60px; height: 60px;">
+                <span class="fw-bold fs-4">3</span>
+            </div>
+            <h4>Konfirmasi Booking</h4>
+            <p class="text-muted">Lengkapi detail booking dan tunggu konfirmasi dari restaurant untuk reservasi Anda.
+            </p>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <% if (!user) { %>
+        <div class="row">
+            <div class="col-12">
+                <div class="cta-section bg-light rounded-4 p-5 text-center">
+                    <h3 class="mb-3">Siap untuk Memulai?</h3>
+                    <p class="lead text-muted mb-4">
+                        Bergabunglah dengan ribuan pengguna yang telah mempercayai layanan kami untuk kebutuhan dining
+                        mereka.
+                    </p>
+                    <a href="/auth/register" class="btn btn-primary btn-lg">
+                        <i class="fas fa-rocket me-2"></i>Get Started Now
+                    </a>
+                </div>
+            </div>
+        </div>
+        <% } %>
+</div>

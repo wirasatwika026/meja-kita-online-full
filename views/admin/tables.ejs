@@ -1,0 +1,134 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 px-0">
+            <div class="bg-dark min-vh-100">
+                <div class="p-3">
+                    <h5 class="text-white">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Admin Panel
+                    </h5>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link text-light" href="/admin/dashboard">
+                        <i class="fas fa-home me-2"></i>Dashboard
+                    </a>
+                    <a class="nav-link text-light active" href="/admin/tables">
+                        <i class="fas fa-table me-2"></i>Manage Tables
+                    </a>
+                    <a class="nav-link text-light" href="/admin/bookings">
+                        <i class="fas fa-calendar-alt me-2"></i>Manage Bookings
+                    </a>
+                    <a class="nav-link text-light" href="/admin/users">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <div class="p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Manage Tables</h1>
+                    <a href="/admin/tables/new" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add New Table
+                    </a>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <input type="text" id="tableSearch" class="form-control" placeholder="Search tables...">
+                    </div>
+                </div>
+
+                <!-- Tables List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-table me-2"></i>
+                            All Tables (<%= tables.length %>)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <% if (tables.length> 0) { %>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Table Number</th>
+                                            <th>Capacity</th>
+                                            <th>Location</th>
+                                            <th>Price/Hour</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% tables.forEach(table=> { %>
+                                            <tr>
+                                                <td>
+                                                    <strong>
+                                                        <%= table.tableNumber %>
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <i class="fas fa-users me-1"></i>
+                                                    <%= table.capacity %> guests
+                                                </td>
+                                                <td>
+                                                    <% if (table.location) { %>
+                                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                                        <%= table.location %>
+                                                            <% } else { %>
+                                                                <span class="text-muted">-</span>
+                                                                <% } %>
+                                                </td>
+                                                <td class="text-success fw-bold">
+                                                    $<%= parseFloat(table.pricePerHour).toFixed(2) %>
+                                                </td>
+                                                <td>
+                                                    <% if (table.isAvailable) { %>
+                                                        <span class="badge bg-success">Available</span>
+                                                        <% } else { %>
+                                                            <span class="badge bg-danger">Unavailable</span>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        <a href="/admin/tables/<%= table.id %>/edit"
+                                                            class="btn btn-outline-primary" title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <form action="/admin/tables/<%= table.id %>/delete"
+                                                            method="POST" class="d-inline">
+                                                            <button type="submit" class="btn btn-outline-danger"
+                                                                data-confirm="Are you sure you want to delete this table?"
+                                                                title="Delete">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <% } else { %>
+                                <div class="text-center py-5">
+                                    <i class="fas fa-table fa-3x text-muted mb-3"></i>
+                                    <h4 class="text-muted">No Tables Found</h4>
+                                    <p class="text-muted">Start by adding your first table to the system.</p>
+                                    <a href="/admin/tables/new" class="btn btn-primary">
+                                        <i class="fas fa-plus me-2"></i>Add New Table
+                                    </a>
+                                </div>
+                                <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

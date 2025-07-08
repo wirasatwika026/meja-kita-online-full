@@ -1,0 +1,43 @@
+{
+  "name": "meja-kita-online",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "docker:build": "docker build -t meja-kita-online .",
+    "docker:run": "docker run -p 3000:3000 meja-kita-online",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "restaurant",
+    "booking",
+    "table",
+    "reservation"
+  ],
+  "author": "Yordy Wira",
+  "license": "ISC",
+  "description": "Aplikasi booking meja restaurant online",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "connect-session-sequelize": "^8.0.1",
+    "dotenv": "^17.1.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-ejs-layouts": "^2.5.1",
+    "express-rate-limit": "^7.4.1",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.0.0",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "winston": "^3.15.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
