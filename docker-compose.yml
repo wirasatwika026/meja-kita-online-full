@@ -6,39 +6,45 @@ services:
     image: postgres:15-alpine
     container_name: meja-kita-db
     environment:
-      POSTGRES_DB: meja_kita_online
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"  # Bind only to localhost for security
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - meja-kita-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
 
   # Node.js Application
   app:
     build: .
     container_name: meja-kita-app
     environment:
-      - NODE_ENV=production
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=meja_kita_online
-      - DB_USER=postgres
-      - DB_PASSWORD=password
-      - SESSION_SECRET=your-super-secret-key-change-this-in-production
-      - PORT=3000
-      - ADMIN_EMAIL=admin@mejakita.com
-      - ADMIN_PASSWORD=admin123
+      - NODE_ENV=${NODE_ENV}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - PORT=${PORT}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - SECURE_COOKIES=${SECURE_COOKIES}
+      - TRUST_PROXY=${TRUST_PROXY}
+      - RATE_LIMIT_WINDOW_MS=${RATE_LIMIT_WINDOW_MS}
+      - RATE_LIMIT_MAX_REQUESTS=${RATE_LIMIT_MAX_REQUESTS}
+      - LOG_LEVEL=${LOG_LEVEL}
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"  # Bind only to localhost for security
     depends_on:
       postgres:
         condition: service_healthy
